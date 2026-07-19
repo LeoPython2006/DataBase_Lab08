@@ -1,51 +1,49 @@
-# Lab 08 – Database Functions and Triggers
+<div align="center">
 
+# Database Lab 08
 
-## Tasks
+### Resolving geographic coordinates into addresses with PostgreSQL and Python
 
-In our database, there is a table called airports_data that contains a column called coordinates. The goal is to convert these coordinates into real address.
-To achieve this, the following steps need to be taken:
-Create a function that retrieves all addresses where both coordinates are not less than 35 and not greater than 50.
-Call this function from a Python script and use geoPy to obtain address from the coordinates.
-Your python script should create a new table called Address with the following columns: address_id, address_text, address_x, address_y..
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Functions_and_Triggers-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Python](https://img.shields.io/badge/Python-Geocoding-3776AB?style=flat-square&logo=python&logoColor=white)
+![Status](https://img.shields.io/badge/status-coursework_specification-6B7280?style=flat-square)
 
-[Postgresql Functions](https://www.postgresqltutorial.com/postgresql-python/postgresql-python-call-postgresql-functions/)
+</div>
 
-[Python Script](https://github.com/enghamzasalem/Create_db_faker)
+## Objective
 
-[geoPy](https://pypi.org/project/geopy/)
+Design a small data pipeline that reads eligible coordinates from **airports_data**, resolves them to human-readable addresses with GeoPy, and persists the results in PostgreSQL.
 
-* Task:  Coordinates → Address (Python + PostgreSQL)
+## Target workflow
 
-## Submission Instructions
-
-1. Create a new branch:
-
-   ```
-   git checkout -b yourname_lab08
-   ```
-
-2. Complete all tasks.
-
-3. Commit your work:
-
-   ```
-   git add .
-   git commit -m "Lab08 submission - Your Name"
-   ```
-
-4. Push your branch:
-
-   ```
-   git push origin yourname_lab08
-   ```
+~~~mermaid
+flowchart LR
+    A[airports_data] --> B[PostgreSQL function]
+    B --> C[Python client]
+    C --> D[GeoPy geocoder]
+    D --> E[Address table]
+~~~
 
 ## Requirements
-* Do NOT push to the main branch
-* SQL files must run without errors
-* Python script must execute successfully
-* Use LIMIT to avoid API rate limits
 
-## Deadline
+1. Create a PostgreSQL function that returns coordinate pairs within the requested range.
+2. Call the function from Python.
+3. Resolve coordinates to addresses through GeoPy.
+4. Create and populate an **Address** table with:
+   - **address_id**
+   - **address_text**
+   - **address_x**
+   - **address_y**
+5. Apply a conservative request limit to respect geocoding service policies.
 
-03-19-2026
+## Engineering considerations
+
+- Parameterize SQL instead of interpolating values.
+- Add a unique constraint to avoid duplicate address rows.
+- Handle timeouts, missing geocoder results, and retryable errors.
+- Keep database credentials in environment variables.
+- Cache resolved coordinates to reduce external API calls.
+
+## Repository status
+
+The default branch currently contains the coursework specification. A completed implementation has not yet been committed here.
